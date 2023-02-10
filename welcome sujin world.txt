@@ -1,0 +1,14 @@
+localhost:8001/jsp      			=> 메인페이지 index.jsp 응답
+
+* 로그인 서비스
+localhost:8001/jsp/login.me   		=> 로그인 요청처리후 실패 => views/common/errorPage.jsp 응답
+            				=> 로그인 요청처리후 성공 => localhost:8001/jsp url재요청 => 메인페이지 index.jsp
+
+* 회원가입 서비스
+localhost:8001/jsp/enrollForm.me   		=> 회원가입페이지 views/member/memberEnrollForm.jsp 응답
+localhost:8001/jsp/insert.me      		=> 회원가입 요청처리후 실패 => views/common/errorPage.jsp 응답
+               				=> 회원가입 요청처리후 성공 => localhost:8001/jsp url재요청 => 메인페이지 index.jsp
+
+* 마이페이지 서비스
+localhost:8001/jsp/myPage.me      		=> 마이페이지 views/member/myPage.jsp 응답
+
