@@ -29,13 +29,14 @@
 		String email = (loginUser.getEmail() == null) ? "" : loginUser.getEmail();
 		String address = (loginUser.getAddress() == null) ? "" : loginUser.getAddress();
 		String interest = (loginUser.getInterest() == null) ? "" : loginUser.getInterest();
+		// "운동,등산,영화" | ""
 	%>
 
     <div class="outer">
         <br>
         <h2 align="center">마이페이지</h2>
 
-        <form id="mypage-form" action="" method="post"> <!-- menubar.jsp에 contextPath를 만들어뒀는데 menubar.jsp가 include 되어있으므로 contextPath 사용가능함. -->
+        <form id="mypage-form" action="<%= contextPath %>/update.me" method="post"> <!-- menubar.jsp에 contextPath를 만들어뒀는데 menubar.jsp가 include 되어있으므로 contextPath 사용가능함. -->
 
             <table>
                 <tr>
@@ -86,13 +87,33 @@
                     </td>
                 </tr>
             </table>
+            
+            
+            <script>
+            	$(function(){
+            		const interest = "<%= interest %>";
+            		// 현재 로그인한 회원의 관심분야들
+            		// "" | "운동,등산,게임"		// 체크박스에 순차적으로 하나씩 접근하여 확인해야함
+            		
+            		$("input[type=checkbox]").each(function(){
+            			// $(this) : 순차적으로 접근되는 체크박스 요소
+            			// $(this).val() : 해당 체크박스의 value 값 => 운동 등산 게임..
+            			if(interest.search($(this).val()) != -1){ 					// search() 메소드는 없으면 -1, 있을 땐 1을 뱉음
+            				$(this).attr("checked", true);							// 있는 경우 checked라는 속성이 true가 됨.
+            			}
+            				
+            		})
+            	})
+            	
+            
+            </script>
 
             <br><br>
 
             <div align="center">
-                <button type="submit">정보변경</button>
-                <button type="button">비밀번호변경</button>
-                <button type="button">회원탈퇴</button>
+                <button type="submit" class="btn btn-sm btn-secondary">정보변경</button>
+                <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#updatePwdModal">비밀번호변경</button>
+                <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal">회원탈퇴</button>
             </div>
 
             <br>
@@ -100,5 +121,114 @@
         </form>
 
     </div>
+    
+    <!-- 비밀번호 변경용 Modal -->
+	<div class="modal" id="updatePwdModal">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	
+	      <!-- Modal Header -->
+	      <div class="modal-header">
+	        <h4 class="modal-title">비밀번호 변경</h4>
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	      </div>
+	
+	      <!-- Modal body -->
+	      <div class="modal-body" align="center">
+
+	        <form action="<%= contextPath %>/updatePwd.me" method="post">
+	        <input type="hidden" name="userId" value="<%= userId %>"> <!-- "hidden" : session에 접속한 아이디를 modal 창에 보이기는 싫지만 조건문 작성에 사용하려면 값을 불러와야되므로 사용함 -->
+                <table>
+                    <tr>
+                        <td>현재 비밀번호</td>
+                        <td><input type="password" name="userPwd" required></td>
+                    </tr>
+                    <tr>
+                        <td>변경할 비밀번호</td>
+                        <td><input type="password" name="updatePwd" required></td>
+                    </tr>
+                    <tr>
+                        <td>변경할 비밀번호 확인</td>
+                        <td><input type="password" name="checkPwd" required></td>
+                    </tr>
+                </table>
+
+                <br>
+
+                <button type="submit" class="btn btn-sm btn-secondary" onclick="return validatePwd();">비밀번호 변경</button>
+
+            </form>
+
+	        
+	      </div>
+
+          <script>
+            function validatePwd(){
+                if($("input[name=updatePwd]").val() != $("input[name=checkPwd]").val()){
+                    alert("변경할 비밀번호가 일치하지 않습니다.");
+                    return false;           // 버튼 타입이 submit이라 제출하는 것을 막아줌.
+                }
+            }
+          </script>
+	
+
+
+	      
+	
+	    </div>
+	  </div>
+	</div>
+
+
+    <!-- 회원탈퇴용 Modal -->
+	<div class="modal" id="deleteModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+      
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">회원탈퇴</h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+      
+            <!-- Modal body -->
+            <div class="modal-body" align="center">
+  
+             <form action="<%= contextPath %>/delete.me" method="post">
+             <input type="hidden" name="userId" value="<%= userId %>">
+                <b>탈퇴 후 복구가 불가능 합니다. <br> 정말로 탈퇴하시겠습니까?</b> <br><br>
+
+                비밀번호 : <input type="password" name="userPwd" required> <br><br>
+                <button type="submit" class="btn btn-sm btn-danger">탈퇴하기</button>
+
+                <!--
+                    회원 탈퇴요청시 sql문
+                    UPDATE MEMBER
+                       SET STATUS = 'N',
+                           MODIFY_DATE = SYSDATE
+                     WHERE USER_ID = 현재로그인한 회원 아이디
+                       AND USER_PWD = 사용자가 입력한 비밀번호
+
+                       (정보변경, 비번변경 처럼 갱신된 회원 조회 필요 없음)
+
+                       성공했을 경우 : 메인페이지 alert(성공적으로 회원 탈퇴 되었습니다. 그동안 이용해주셔서 감사합니다.)
+                                      단, 로그아웃 되어 있어야함 (세션에 loginUser 라는 키값에 해당하는걸 지우기)   // 무력화하기
+
+                       실패했을 경우 : 마이페이지 alert(회원탈퇴 실패)
+
+
+                -->
+
+             </form>
+  
+              
+            </div>
+      
+          </div>
+        </div>
+     </div>
+
+
+
 </body>
 </html>
