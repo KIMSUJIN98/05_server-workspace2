@@ -1,0 +1,32 @@
+1. menubar.jsp에서 경로 설정 <div class="menu"><a href="<%= contextPath %>/list.no">공지사항</a></div>
+2. src>com>kh>notice>controller에 NoticeListController라는 서블릿 파일 생성 : 이때 서블릿명? 주소는 /list.no로 지정
+3. src>com>kh>notice>model 아래 아래의 클래스 파일들 생성하기
+	- vo 클래스파일 생성 => 테이블당 하나 나온다고 생각
+	- service 클래스파일 생성
+	- dao 클래스파일 생성
+4. Notice.java 에서 DB 참고하여 변수 생성, 기본생성자, 생성자, 게터세터, toString 생성
+5. WebContent>views>notice>noticeListView.jsp jsp 파일 생성
+6. VS에서 noticeListView.jsp 열고 화면 설계하기
+7. NoticeListController.jsp(/list.no)에서 doGet 작성하기
+8. NoticeService.java
+9. NoticeDao.java // 7~9 연동하여 소스코드 작성하기
+10. src>db>sql>notice-mapper.xml 새로운 xml 파일 생성하기 // properties 연결하고 DB참고하여 쿼리문 작성
+11. NoticeDao.java 작성
+12. NoticeDao.java에서 rset.getInt/String 으로 받는 데이터들을 담을 생성자를 Notice.java에서 생성하기
+13. NoticeDao.java에서 rset과 pstmt 닫고, NoticeService.java로 이동하여 conn닫기
+14. NoticeListController.jsp로 이동하여 응답뷰 설정하기
+15. noticeListView.jsp에서 getAttribute로 연결 <% ArrayList<Notice> list = (ArrayList<Notice>)request.getAttribute("list"); %>
+16. noticeListView.jsp에서 하드코딩 내용은 스크립틀릿으로 변경하여 작성하기
+
+17. noticeListView.jsp에서 로그인한 사용자가 관리자일 경우 글작성 버튼 보이게끔 환경 설정
+18. src>com>kh>notice>controller에 NoticeEnrollFormController.java 라는 새로운 서블릿 파일 생성
+19. WebContent>views>notice>noticeEnrollForm.jsp 라는 새로운 jsp 파일 생성
+20. VS에서 noticeEnrollForm.jsp 열고 화면 설계하기
+21. NoticeEnrollFormController.java(/enrollForm.no)에서 doGet 작성하기
+22. src>com>kh>notice>controller에 NoticeInsertController.java(/insert.no) 라는 새로운 서블릿 파일 생성
+23. NoticeInsertController.java(/insert.no)에서 doGet 작성하기
+24. NoticeService.java 작성하기
+25. NoticeDao.java 작성하기
+26. notice-mapper.xml 에서 쿼리문 작성하기
+27. NoticeDao.java 마저 작성하기
+28. NoticeInsertController.java에서 마저 작성하기
