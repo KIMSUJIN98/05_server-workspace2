@@ -1,0 +1,37 @@
+** 공지사항 상세조회 **
+
+1. noticeListView.jsp에서 클릭이벤트 생성
+2. 새로운 서블릿 파일 생성 NoticeDetailController.java (url mapping : /detail.no) 에서 doGet문 작성
+3. NoticeService.java 에서 increaseCount메소드 작성
+4. NoticeDao.java 에서 increaseCount메소드 작성
+5. notice-mapper.xml 에서 key="increaseCount"인 sql 작성
+6. NoticeDao.java 에서 increaseCount메소드 재작성
+7. NoticeService.java 에서 increaseCount메소드 재작성
+8. NoticeDetailController.java 에서 doGet문 재작성 => 이때 성공시 상세조회로 이동해야함
+9. NoticeService.java 에서 selectNotice메소드 작성(이번에는 재작성 과정 없애고자 이후 과정 고려하여 한번에 작성)
+10. NoticeDao.java 에서 selectNotice메소드 생성
+11. 새로운 jsp파일 noticeDetailView.jsp를 생성하고 VS코드로 html 작성(화면 설계)
+12. notice-mapper.xml 에서 key="selectNotice"인 sql 작성
+13. NoticeDao.java에서 selectNotice메소드 작성 => try-catch문의 if조건식에서 생성되는 Notice n 객체를 담는 매개변수 생성자가 없으므로 에러 발생!
+14. Notice.java에서 위의 n객체 매개변수 요소들을 담을수 있는 생성자 생성
+15. NoticeDao.java에서 selectNotice메소드 재작성
+16. NoticeDetailController.java에서 성공시 상세조회로 이동하는 doGet문 재작성(포워딩 방식)
+17. noticeDetailView.jsp에서 하드코딩된 부분들을 <% Notice n = (Notice)request.getAttribute("notice"); %>를 추가하여 스크립틀릿으로 변경, 목록가기 a태그의 href="#"을 url매핑값으로 변경, 수정하기와 삭제하기는 if 조건 작성하기
+
+** 공지사항 수정하기 **
+1. 새로운 jsp 파일 noticeUpdateForm.jsp 생성하고 VS코드로 html 작성(화면 설계)
+2. noticeDetailView.jsp에서 a태그인 수정하기의 href="#"값을 url매핑값으로 변경
+3. 새로운 서블릿 파일 생성 NoticeUpdateFormController.java (url mapping : /updateForm.no) 에서 doGet문 작성 => 이때 공지사항 상세조회에서 사용했던 메소드를 재사용함.
+4. noticeUpdateForm.jsp에서 하드코딩된 부분들을 <% Notice n = (Notice)request.getAttribute("n"); %>을 추가하여 스크립틀릿으로 변경
+5. noticeUpdateForm.jsp에서 form태그 내의 비어있는 action="" 값을 작성(<%= contextPath %>/update.no)하고,  키값 name="num"에 유의하여 공지사항 번호를 스크립틀릿으로 hidden으로 넘김.
+6. 새로운 서블릿 파일 생성 NoticeUpdateController.java (url mapping : /update.no) 에서 doGet문 작성(사용자에게 입력받은 수정된 제목, 내용을 Notice n 객체에 담아보낼 때 쿼리문에 사용될 공지사항 번호도 같이 담아서 보냄) => noticeUpdateForm.jsp의 form태그의 action값 경로와 url매핑값이 일치해야함!
+7. NoticeService.java 에서 updateNotice메소드 작성(이번에는 재작성 과정 없애고자 이후 과정 고려하여 한번에 작성)
+8. NoticeDao.java 에서 updateNotice메소드 생성
+9. notice-mapper.xml 에서 key="updateNotice"인 sql 작성
+10. NoticeDao.java 에서 updateNotice메소드 작성
+11. NoticeUpdateController.java (url mapping : /update.no) 에서 doGet문 재작성(url 재요청 방식)
+
+** 공지사항 삭제하기 **
+
+
+
