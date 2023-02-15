@@ -1,0 +1,34 @@
+** 데이터 IMPORT
+1. EXCEL로 쉽게 데이터를 만든다(맨 위의 행은 테이블 헤더 역할이므로 컬럼명을 작성)
+2. SQL Developer에서 임포트하고자하는 테이블에 들어가서 우클릭>데이터 임포트>excel파일 첨부
+3. 시퀀스 값으로 작성한 컬럼은 create 시퀀스 생성문이 포함되어 있지 않기에 에러가 발생한다. => 그냥 무시하고 확인
+4. INSERT문으로 데이터 삽입 쿼리문이 자동 작성되는데 맨 아래 COMMIT;을 추가하여 스크립트문을 run한다.
+5. SELECT * FROM BOARD(테이블명);로 제대로 임포트 되었는지 확인하기
+ 
+
+** 일반 게시판 조회(BOARD_TYPE = 1) + 페이징
+1. menubar.jsp에서 일반게시판 href에 주소 할당해주기 => 이때 페이징 중에서 첫번째 페이지로 이동하기 위해 주소에 ?키-벨류 값을 할당함
+2. 새로운 서블릿 파일 BoardListController.java(url : /list.bo) 생성
+3. 새로운 클래스 파일 Board.java 생성
+4. 새로운 클래스 파일 BoardService.java 생성
+5. 새로운 클래스 파일 BoardDao.java 생성
+6. 새로운 xml 파일 board-mapper.xml 생성 => 기존에 xml 파일이 있는 경우 복붙할때 이름만 변경하면 더 빠르게 만들 수 있다!
+7. Board.java에서 변수 선언, 기본생성자, 매개변수생성자, 게터-세터, toString문 작성
+8. BoardListController.java(url : /list.bo)에서 doGet문 작성
+9. BoardService.java에서 selectListCount() 메소드 작성 => 이때 jdbcTemplate static 선언
+10. BoardDao.java에서 prop선언하고 갱신위한 BoardDao() 생성 후, selectListCount() 메소드 작성
+11. board-mapper.xml에서 selectListCount()메소드명을 키로 한 sql문 작성 => COUNT(*)로 부르면 길어지므로 count라고 별칭 지정 (BoardDao.java에서 별칭으로 보다 쉽게 호출할 수 있도록 하기 위함)
+12. BoardDao.java에서 selectListCount() 메소드 재작성 => 이때 완성된 sql문이고,  jdbcTemplate은 static 선언
+13. BoardService.java에서 selectListCount() 메소드 재작성 => 몇개인지 조회된 결과만 알려주면 되므로 트랜젝션 처리 필요 없음
+14. BoardListController.java(url : /list.bo)에서 doGet문 재작성
+15. 새로운 클래스 파일 PageInfo.java를 com.kh.common.model.vo 아래에 생성하고 변수 선언, 기본생성자, 매개변수생성자, 게터-세터, toString문 작성 => 필요할때마다 페이징바 객체를 불러오기 위해서 따로 만들어서 보관한다.
+16. 새로운 jsp 파일 boardListView.jsp 생성하고 menubar.jsp 파일을 인클루드 한다. <%@ include file = "../common/menubar.jsp" %>
+17. VS에서 boardListView.jsp 열고 화면설계
+18. BoardListController.java(url : /list.bo)에서 doGet문 재작성 : 게시글 리스트
+19. BoardService.java에서 selectList() 메소드 생성하고 작성
+20. BoardDao.java에서 selectList() 메소드 생성하고 작성
+21. board-mapper.xml에서 selectList()메소드명을 키로 한 sql문 작성 => ROWNUM 쓰기위한 서브쿼리, 원하는 DATE 출력형태 위한 TO_CHAR, 별칭으로 코드 간소화 등 수행하기
+22. BoardDao.java에서 selectList() 메소드 재작성
+23. BoardService.java에서 selectList() 메소드 재작성
+24. BoardListController.java(url : /list.bo)에서 doGet문 또 재작성 => setAttribute("키", 벨류)를 담아서 보낸다. 
+25. boardListView.jsp에서 하드코딩을 스크립틀릿 구문으로 변경하며 작성 => getAttribute("키")로 받고 다운캐스팅, 임포트 확실하게 수행

@@ -125,7 +125,8 @@
         <!-- (.menu>a)*4 -->
         <div class="menu"><a href="<%= contextPath %>">HOME</a></div>
         <div class="menu"><a href="<%= contextPath %>/list.no">공지사항</a></div>
-        <div class="menu"><a href="#">일반게시판</a></div>
+        <div class="menu"><a href="<%= contextPath %>/list.bo?cpage=1">일반게시판</a></div> <!-- 페이징 중에서 첫번째 페이지로 이동하기 위해 주소에 키-벨류 값을 할당함 -->
+        <div class="menu"><a href="<%= contextPath %>/list.boo">특별게시판</a></div>
         <div class="menu"><a href="#">사진게시판</a></div>
     </div>
 
