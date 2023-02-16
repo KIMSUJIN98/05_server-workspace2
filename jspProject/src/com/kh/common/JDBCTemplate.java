@@ -41,6 +41,7 @@ public class JDBCTemplate {
                     						   prop.getProperty("username"),
                     						   prop.getProperty("password"));
 		
+			conn.setAutoCommit(false);																				// JDBC는 autoCommit이 자동적으로 켜져있어 쿼리를 틀렸을때도 rollback이 되지않고 commit이 되버린다. 이를 해결하고자 다음 코드를 추가함.
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
