@@ -6,6 +6,11 @@
 <%
 	PageInfo pi = (PageInfo)request.getAttribute("pi"); 						// object 뱉으므로 다운캐스팅, import 확실하게 처리
 	ArrayList<Board> list = (ArrayList<Board>)request.getAttribute("list"); 	// object 뱉으므로 다운캐스팅, import 확실하게 처리
+
+	int currentPage = pi.getCurrentPage(); // 현재페이지에 대한 정보를 변수에 저장하여 필요할때마다 변수를 호출해서 사용하고자 함.
+	int startPage = pi.getStartPage(); // 시작페이지에 대한 정보를 변수에 저장하여 필요할때마다 변수를 호출해서 사용하고자 함.
+	int endPage = pi.getEndPage(); // 끝페이지에 대한 정보를 변수에 저장하여 필요할때마다 변수를 호출해서 사용하고자 함.
+	int maxPage = pi.getMaxPage(); // max 페이지에 대한 정보를 변수에 저장하여 필요할때마다 변수를 호출해서 사용하고자 함.
 %>
 <!DOCTYPE html>
 <html>
@@ -17,7 +22,7 @@
         background-color: black;
         color: white;
         width: 1000px;
-        height: 500px;
+        height: 600px;
         margin: auto;
         margin-top: 50px;
     }
@@ -36,10 +41,12 @@
         <br>
 
         <!-- 로그인한 회원만 보여지는 div -->
+        <% if(loginUser != null) { %>
         <div align="right" style="width: 860px;">
-            <button>글작성</button>
+            <a href="<%=contextPath%>/enrollForm.bo" class="btn btn-sm btn-secondary">글작성</a>
             <br><br>
         </div>
+        <% } %>
 
         <table align="center" class="list-area">
             <thead>
@@ -79,19 +86,21 @@
 
         <div class="paging-area" align="center"> <!-- 페이징바를 넣을 div -->
         
-        	아직 페이징바는 미완성 상태
-            <button>&lt;</button>
-            <button>1</button>
-            <button>2</button>
-            <button>3</button>
-            <button>4</button>
-            <button>5</button>
-            <button>6</button>
-            <button>7</button>
-            <button>8</button>
-            <button>9</button>
-            <button>10</button>
-            <button>&gt;</button>
+        	<% if(currentPage != 1){ %>
+            	<button onclick="location.href ='<%=contextPath%>/list.bo?cpage=<%=currentPage-1%>';">&lt;</button>
+            <% } %>
+            
+            <% for(int p = startPage; p<=endPage; p++){ %>
+            	<% if(p == currentPage){ %>
+            		<button style="background: pink" disabled><%= p %></button>
+            	<% }else { %>
+            		<button onclick = "location.href = '<%=contextPath%>/list.bo?cpage=<%=p%>';"><%= p %></button>
+            	<% } %>
+            <% } %>
+            
+            <% if(currentPage != maxPage){ %>
+            	<button onclick="location.href ='<%=contextPath%>/list.bo?cpage=<%=currentPage+1%>';">&gt;</button>
+        	<% } %>
         </div>
 
 
