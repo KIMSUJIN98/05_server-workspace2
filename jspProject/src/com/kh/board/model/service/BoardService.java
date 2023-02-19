@@ -68,6 +68,39 @@ public class BoardService {
 		
 	}
 	
+	public int increaseCount(int boardNo) {
+		Connection conn = getConnection();
+		int result = new BoardDao().increaseCount(conn, boardNo);
+		
+		if(result > 0) {
+			commit(conn);
+		}else {
+			rollback(conn);
+		}
+		
+		close(conn);
+		
+		return result;
+		
+	}
+	
+	public Board selectBoard(int boardNo) {
+		Connection conn = getConnection();
+		Board b = new BoardDao().selectBoard(conn, boardNo);
+		// select문이므로 트랜젝션 처리 불필요함.
+		close(conn);
+		return b;
+	}
+	
+	public Attachment selectAttachment(int boardNo) {
+		Connection conn = getConnection();
+		Attachment at = new BoardDao().selectAttachment(conn, boardNo);
+		
+		close(conn);
+		return at;
+		
+	}
+	
 
 	
 	

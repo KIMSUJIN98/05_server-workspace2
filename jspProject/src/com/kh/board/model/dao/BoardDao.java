@@ -220,5 +220,91 @@ public class BoardDao {
 		
 		return result;
 	}
-
+	
+	public int increaseCount(Connection conn, int boardNo) {
+		// update문 => 처리된 행수 => 트랜젝션 처리
+		int result = 0;
+		PreparedStatement pstmt = null;
+		
+		String sql = prop.getProperty("increaseCount");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, boardNo);
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+		
+	}
+	
+	public Board selectBoard(Connection conn, int boardNo) {
+		// select문 => ResultSet 객체 => 한행 => Board
+		Board b = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		String sql = prop.getProperty("selectBoard");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, boardNo);
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				b = new Board(rset.getInt("board_no"),
+							  rset.getString("category_name"),
+							  rset.getString("board_title"),
+							  rset.getString("board_content"),
+							  rset.getString("user_id"),
+							  rset.getString("create_date"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return b;
+	}
+	
+	public Attachment selectAttachment(Connection conn, int boardNo) {
+		// select문 => ResultSet 객체 반환 => 한행 => Attachment 객체
+		Attachment at = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		String sql = prop.getProperty("selectAttachment");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, boardNo);
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				at = new Attachment(); // 기본생성자 만들고, 세터 메소드를 사용함으로써 매개변수 생성자를 별도로 만들 필요가 없어짐.
+				at.setFileNo(rset.getInt("file_no"));
+				at.setOriginName(rset.getString("origin_name"));
+				at.setChangeName(rset.getString("change_name"));
+				at.setFilePath(rset.getString("file_path"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return at;
+		
+	}
 }
