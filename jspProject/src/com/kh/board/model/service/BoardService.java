@@ -13,6 +13,10 @@ import static com.kh.common.JDBCTemplate.*;
 
 public class BoardService {
 	
+	/**
+	 * 일반게시판 조회수 조회
+	 * @return
+	 */
 	public int selectListCount() {
 		Connection conn = /*JDBCTemplate.*/getConnection();
 		
@@ -23,6 +27,11 @@ public class BoardService {
 		
 	}
 	
+	/**
+	 * 일반게시판 목록 조회
+	 * @param pi
+	 * @return
+	 */
 	public ArrayList<Board> selectList(PageInfo pi){
 		Connection conn = getConnection();
 		ArrayList<Board> list = new BoardDao().selectList(conn, pi);
@@ -31,6 +40,10 @@ public class BoardService {
 		return list; // select이므로 트랜젝션 처리 불필요함.
 	}
 	
+	/**
+	 * 일반게시판 목록 조회
+	 * @return
+	 */
 	public ArrayList<Board> selectList(){
 		Connection conn = getConnection();
 		ArrayList<Board> list = new BoardDao().selectList(conn);
@@ -39,6 +52,10 @@ public class BoardService {
 		return list; // select이므로 트랜젝션 처리 불필요함.
 	}
 	
+	/**
+	 * 카테고리 목록 조회
+	 * @return
+	 */
 	public ArrayList<Category> selectCategoryList(){
 		Connection conn = getConnection();
 		ArrayList<Category> list = new BoardDao().selectCategoryList(conn);
@@ -47,6 +64,12 @@ public class BoardService {
 		return list;
 	}
 	
+	/**
+	 * 게시판 등록
+	 * @param b
+	 * @param at
+	 * @return
+	 */
 	public int insertBoard(Board b, Attachment at) {
 		Connection conn = getConnection();
 		
@@ -68,6 +91,11 @@ public class BoardService {
 		
 	}
 	
+	/**
+	 * 조회수 증가
+	 * @param boardNo
+	 * @return
+	 */
 	public int increaseCount(int boardNo) {
 		Connection conn = getConnection();
 		int result = new BoardDao().increaseCount(conn, boardNo);
@@ -84,6 +112,11 @@ public class BoardService {
 		
 	}
 	
+	/**
+	 * 게시글 조회
+	 * @param boardNo
+	 * @return
+	 */
 	public Board selectBoard(int boardNo) {
 		Connection conn = getConnection();
 		Board b = new BoardDao().selectBoard(conn, boardNo);
@@ -92,12 +125,53 @@ public class BoardService {
 		return b;
 	}
 	
+	/**
+	 * 첨부파일 조회
+	 * @param boardNo
+	 * @return
+	 */
 	public Attachment selectAttachment(int boardNo) {
 		Connection conn = getConnection();
 		Attachment at = new BoardDao().selectAttachment(conn, boardNo);
 		
 		close(conn);
 		return at;
+		
+	}
+	
+	/**
+	 * 게시판 수정
+	 * @param b
+	 * @param at
+	 * @return
+	 */
+	public int updateBoard(Board b, Attachment at) {
+		Connection conn = getConnection();
+		
+		int result1 = new BoardDao().updateBoard(conn, b);							// 첨부파일 유뮤와 상관없이 공통적으로 수행해야 하는 작업임. 첨부파일이 없는 경우 이 작업만 수행함!
+		
+		int result2 = 1;
+		
+		if(at != null) { // 새로운 첨부파일이 있었을 경우
+			
+			if(at.getFileNo() != 0) { // 기존에 첨부파일이 있었을 경우						// DB의 FILE_NO은 시퀀스로 자동할당 (첨부파일이 없는 경우에 해당되는 기본값은 0이다)되므로 0이 아니면 첨부파일이 있는 경우에 해당함.
+				result2 = new BoardDao().updateAttachment(conn, at);
+			}else { // 기존에 첨부파일이 없는 경우 new!!
+				result2 = new BoardDao().insertNewAttachment(conn, at);
+			}
+		}
+		
+		if(result1 > 0 && result2 > 0) {
+			commit(conn);
+		}else {
+			rollback(conn);
+		}
+		
+		close(conn);
+		
+		return result1 * result2;
+		
+		
 		
 	}
 	

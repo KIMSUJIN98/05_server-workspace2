@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
+<!-- 게시글 조회수 조회용 쿼리 -->
 <entry key="selectListCount">
 	SELECT
 	       COUNT(*) count
@@ -9,6 +10,7 @@
 	   AND STATUS = 'Y'
 </entry>
 
+<!-- 게시글 목록 조회 쿼리 -->
 <entry key="selectList">
 	SELECT *
 	  FROM (SELECT ROWNUM RNUM, A.*
@@ -32,6 +34,7 @@
 	    WHERE RNUM BETWEEN ? AND ?
 </entry>
 
+<!-- 게시글 목록 조회 쿼리 - 부트스트랩 사용 -->
 <entry key="selectList2">
 	SELECT
            BOARD_NO
@@ -84,21 +87,21 @@
 <entry key="insertAttachment">
 	INSERT
 	  INTO ATTACHMENT
-	  (
-	    FILE_NO
-	  , REF_BNO
-	  , ORIGIN_NAME
-	  , CHANGE_NAME
-	  , FILE_PATH
-	  )
-	  VALUES
-	  (
-	    SEQ_FNO.NEXTVAL
-	  , SEQ_BNO.CURRVAL
-	  , ?
-	  , ?
-	  , ?
-	  )
+	  	 (
+		   FILE_NO
+		 , REF_BNO
+		 , ORIGIN_NAME
+		 , CHANGE_NAME
+		 , FILE_PATH
+		 )
+		 VALUES
+		 (
+		   SEQ_FNO.NEXTVAL
+		 , SEQ_BNO.CURRVAL
+		 , ?
+		 , ?
+		 , ?
+		 )
 </entry>
 
 <!-- COUNT 증가 쿼리 -->
@@ -113,27 +116,68 @@
 <!-- 게시판 조회 쿼리 -->
 <entry key="selectBoard">
 	SELECT 
-       BOARD_NO
-     , CATEGORY_NAME
-     , BOARD_TITLE
-     , BOARD_CONTENT
-     , USER_ID
-     , TO_CHAR(CREATE_DATE, 'YYYY/MM/DD') "CREATE_DATE"
-  FROM BOARD
-  JOIN CATEGORY USING(CATEGORY_NO)
-  JOIN MEMBER ON (BOARD_WRITER = USER_NO)
- WHERE BOARD_NO = ?
+	       BOARD_NO
+	     , CATEGORY_NAME
+	     , BOARD_TITLE
+	     , BOARD_CONTENT
+	     , USER_ID
+	     , TO_CHAR(CREATE_DATE, 'YYYY/MM/DD') "CREATE_DATE"
+	  FROM BOARD
+	  JOIN CATEGORY USING(CATEGORY_NO)
+	  JOIN MEMBER ON (BOARD_WRITER = USER_NO)
+	 WHERE BOARD_NO = ?
 </entry>
 
 <!-- 첨부파일 조회용 쿼리 -->
 <entry key="selectAttachment">
 	SELECT
-        FILE_NO
-      , ORIGIN_NAME
-      , CHANGE_NAME
-      , FILE_PATH
-   FROM ATTACHMENT
-  WHERE REF_BNO = ?
+	       FILE_NO
+	     , ORIGIN_NAME
+	     , CHANGE_NAME
+	     , FILE_PATH
+	  FROM ATTACHMENT
+	 WHERE REF_BNO = ?
+</entry>
+
+<!-- 게시판 수정 쿼리 -->
+<entry key="updateBoard">
+	UPDATE
+	       BOARD
+	   SET CATEGORY_NO = ?
+	     , BOARD_TITLE = ?
+	     , BOARD_CONTENT = ?
+	 WHERE BOARD_NO = ?
+</entry>
+
+<!-- 첨부파일 변경 쿼리 -->
+<entry key="updateAttachment">
+	UPDATE
+	       ATTACHMENT
+	   SET ORIGIN_NAME = ?
+	     , CHANGE_NAME = ?
+	     , FILE_PATH = ?
+	 WHERE FILE_NO = ?
+</entry>
+
+<!-- 첨부파일 등록 쿼리 - 게시글 수정시 -->
+<entry key="insertNewAttachment">
+	INSERT
+	  INTO ATTACHMENT
+	     (
+	       FILE_NO
+	     , REF_BNO
+	     , ORIGIN_NAME
+	     , CHANGE_NAME
+	     , FILE_PATH
+	     )
+	     VALUES
+	     (
+	       SEQ_FNO.NEXTVAL
+	     , ?
+	     , ?
+	     , ?
+	     , ?
+	     )
 </entry>
 
 </properties>

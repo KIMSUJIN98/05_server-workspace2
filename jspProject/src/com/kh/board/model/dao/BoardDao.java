@@ -28,6 +28,11 @@ public class BoardDao {
 		}
 	}
 	
+	/**
+	 * 게시판 조회수 조회
+	 * @param conn
+	 * @return
+	 */
 	public int selectListCount(Connection conn) {
 		// select문 => ResultSet 객체 (한개) => int형 변수
 		int listCount = 0;
@@ -54,6 +59,12 @@ public class BoardDao {
 		
 	}
 	
+	/**
+	 * 게시판 목록 조회
+	 * @param conn
+	 * @param pi
+	 * @return
+	 */
 	public ArrayList<Board> selectList(Connection conn, PageInfo pi) {
 		// select문 => ResultSet객체 (여러행) => ArrayList<Board>
 		
@@ -105,6 +116,11 @@ public class BoardDao {
 		
 	}
 	
+	/**
+	 * 게시판 목록 조회 - 부트스트랩 사용
+	 * @param conn
+	 * @return
+	 */
 	public ArrayList<Board> selectList(Connection conn) {
 		// select문 => ResultSet객체 (여러행) => ArrayList<Board>
 		
@@ -140,6 +156,11 @@ public class BoardDao {
 		
 	}
 	
+	/**
+	 * 카테고리 목록 조회
+	 * @param conn
+	 * @return
+	 */
 	public ArrayList<Category> selectCategoryList(Connection conn){
 		// select문 => ResultSet객체 => 여러행 => ArrayList
 		ArrayList<Category> list = new ArrayList<Category>();
@@ -168,6 +189,12 @@ public class BoardDao {
 		
 	}
 	
+	/**
+	 * 게시판 등록??
+	 * @param conn
+	 * @param b
+	 * @return
+	 */
 	public int insertBoard(Connection conn, Board b) {
 		// insert문 => 처리된 행수 => 트랜젝션 처리
 		int result = 0;
@@ -195,6 +222,12 @@ public class BoardDao {
 		return result;
 	}
 	
+	/**
+	 * 첨부파일 등록??
+	 * @param conn
+	 * @param at
+	 * @return
+	 */
 	public int insertAttachment(Connection conn, Attachment at) {
 		// insert문 => 처리된 행수 => 트랜젝션 처리
 		int result = 0;
@@ -221,6 +254,12 @@ public class BoardDao {
 		return result;
 	}
 	
+	/**
+	 * 조회수 증가
+	 * @param conn
+	 * @param boardNo
+	 * @return
+	 */
 	public int increaseCount(Connection conn, int boardNo) {
 		// update문 => 처리된 행수 => 트랜젝션 처리
 		int result = 0;
@@ -243,6 +282,12 @@ public class BoardDao {
 		
 	}
 	
+	/**
+	 * 게시글 조회
+	 * @param conn
+	 * @param boardNo
+	 * @return
+	 */
 	public Board selectBoard(Connection conn, int boardNo) {
 		// select문 => ResultSet 객체 => 한행 => Board
 		Board b = null;
@@ -275,6 +320,12 @@ public class BoardDao {
 		return b;
 	}
 	
+	/**
+	 * 첨부파일 조회
+	 * @param conn
+	 * @param boardNo
+	 * @return
+	 */
 	public Attachment selectAttachment(Connection conn, int boardNo) {
 		// select문 => ResultSet 객체 반환 => 한행 => Attachment 객체
 		Attachment at = null;
@@ -307,4 +358,91 @@ public class BoardDao {
 		return at;
 		
 	}
+	
+	/**
+	 * 게시판 수정?????
+	 * @param conn
+	 * @param b
+	 * @return
+	 */
+	public int updateBoard(Connection conn, Board b) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql = prop.getProperty("updateBoard");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, Integer.parseInt(b.getCategoryNo())); 							// b.getCategoryNo()가 String 형태이므로 강제형변환 필요!
+			pstmt.setString(2, b.getBoardTitle());
+			pstmt.setString(3, b.getBoardContent());
+			pstmt.setInt(4, b.getBoardNo());
+		
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 첨부파일 수정???????
+	 * @param conn
+	 * @param at
+	 * @return
+	 */
+	public int updateAttachment(Connection conn, Attachment at) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		
+		String sql = prop.getProperty("updateAttachment");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, at.getOriginName());
+			pstmt.setString(2, at.getChangeName());
+			pstmt.setString(3, at.getFilePath());
+			pstmt.setInt(4, at.getFileNo());
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 첨부파일 등록 - 게시글 수정
+	 * @param conn
+	 * @param at
+	 * @return
+	 */
+	public int insertNewAttachment(Connection conn, Attachment at) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql = prop.getProperty("insertNewAttachment");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, at.getRefBno());
+			pstmt.setString(2, at.getOriginName());
+			pstmt.setString(3, at.getChangeName());
+			pstmt.setString(4, at.getFilePath());
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+	
 }
