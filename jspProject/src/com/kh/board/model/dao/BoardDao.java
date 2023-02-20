@@ -16,6 +16,12 @@ import com.kh.common.model.vo.PageInfo;
 
 import static com.kh.common.JDBCTemplate.*;
 
+/**
+ * BoardDao.java
+ * @author ksj
+ * @since 2023.02.20
+ * @version 1.0
+ */
 public class BoardDao {
 	
 	private Properties prop = new Properties();
@@ -190,7 +196,7 @@ public class BoardDao {
 	}
 	
 	/**
-	 * 게시판 등록??
+	 * 게시판 등록
 	 * @param conn
 	 * @param b
 	 * @return
@@ -223,7 +229,7 @@ public class BoardDao {
 	}
 	
 	/**
-	 * 첨부파일 등록??
+	 * 첨부파일 등록
 	 * @param conn
 	 * @param at
 	 * @return
@@ -360,7 +366,7 @@ public class BoardDao {
 	}
 	
 	/**
-	 * 게시판 수정?????
+	 * 게시글 수정
 	 * @param conn
 	 * @param b
 	 * @return
@@ -388,7 +394,7 @@ public class BoardDao {
 	}
 	
 	/**
-	 * 첨부파일 수정???????
+	 * 첨부파일 수정
 	 * @param conn
 	 * @param at
 	 * @return

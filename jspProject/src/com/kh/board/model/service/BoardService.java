@@ -11,6 +11,12 @@ import com.kh.common.model.vo.PageInfo;
 
 import static com.kh.common.JDBCTemplate.*;
 
+/**
+ * BoardService.java
+ * @author ksj
+ * @since 2023.02.20
+ * @version 1.0
+ */
 public class BoardService {
 	
 	/**
