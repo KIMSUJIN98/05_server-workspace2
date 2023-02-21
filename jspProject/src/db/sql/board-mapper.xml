@@ -183,4 +183,68 @@
 	     )
 </entry>
 
+<!-- BOARD_TYPE의 경우 일반게시판은 1, 사진게시판은 2이다. -->
+
+<!-- 사진게시판 등록 쿼리 -->
+<entry key="insertThBoard">
+	INSERT
+	  INTO BOARD
+	  (
+	    BOARD_NO
+	  , BOARD_TYPE
+	  , BOARD_TITLE
+	  , BOARD_CONTENT
+	  , BOARD_WRITER
+	  )
+	  VALUES
+	  (
+	    SEQ_BNO.NEXTVAL
+	  , 2
+	  , ?
+	  , ?
+	  , ?
+	  )
+</entry>
+
+<!-- FILE_LEVEL의 경우 대표이미지는 1, 상세이미지는 2이다. -->
+
+<!-- 첨부파일 등록 쿼리 - 사진게시판 등록 -->
+<entry key="insertAttachmentList">
+	INSERT
+	  INTO ATTACHMENT
+	  (
+	    FILE_NO
+	  , REF_BNO
+	  , ORIGIN_NAME
+	  , CHANGE_NAME
+	  , FILE_PATH
+	  , FILE_LEVEL
+	  )
+	  VALUES
+	  (
+	    SEQ_FNO.NEXTVAL
+	  , SEQ_BNO.CURRVAL
+	  , ?
+	  , ?
+	  , ?
+	  , ?
+	  )
+</entry>
+
+<!-- 사진게시판 목록 조회용 쿼리 -->
+<entry key="selectThumbnailList1">
+	SELECT
+	       BOARD_NO
+	     , BOARD_TITLE
+	     , COUNT
+	     , FILE_PATH || CHANGE_NAME "TITLEIMG"
+	  FROM BOARD B
+	  JOIN ATTACHMENT ON (BOARD_NO = REF_BNO)
+	 WHERE BOARD_TYPE = 2
+	   AND B.STATUS = 'Y'
+	   AND FILE_LEVEL = 1
+	 ORDER
+	    BY BOARD_NO DESC
+</entry>
+
 </properties>
