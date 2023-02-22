@@ -1,0 +1,50 @@
+1) jQuery 홈페이지 >> Download >> CDN 검색(ctrl+F)
+
+	https://jquery.com/download/
+
+2) Using jQuery with a CDN > Other CDNs > Google CDN 클릭
+
+	https://developers.google.com/speed/libraries?hl=ko#jquery
+
+3) jQuery > 3.x 스니펫: 	스크립트 구문 사용하기
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+
+
+-------------------------------------------------------------------------------------------------------
+
+1. 구버전 : Ajax 안 먹는다
+	<!-- jQuery library -->
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.slim.min.js"></script>
+
+2. 뉴버전으로 변경!
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+
+
+
+
+SELECT 
+       BOARD_NO
+     , CATEGORY_NAME
+     , BOARD_TITLE
+     , BOARD_CONTENT
+     , USER_ID
+     , TO_CHAR(CREATE_DATE, 'YYYY/MM/DD') "CREATE_DATE"
+  FROM BOARD
+  LEFT JOIN CATEGORY USING(CATEGORY_NO)
+  JOIN MEMBER ON (BOARD_WRITER = USER_NO)
+ WHERE BOARD_NO = 111;
+ -- 왼쪽엔 있는데 오른쪽엔 없다 => LEFT JOIN
+ 
+ SELECT * FROM BOARD;
+ SELECT * FROM CATEGORY;
+ 
+ SELECT * FROM BOARD WHERE BOARD_NO = 111;
+ 
+ SELECT
+        COUNT(*)
+   FROM MEMBER
+  WHERE USER_ID = ?;

@@ -126,10 +126,14 @@
 	     , USER_ID
 	     , TO_CHAR(CREATE_DATE, 'YYYY/MM/DD') "CREATE_DATE"
 	  FROM BOARD
-	  JOIN CATEGORY USING(CATEGORY_NO)
+	  LEFT JOIN CATEGORY USING(CATEGORY_NO)
 	  JOIN MEMBER ON (BOARD_WRITER = USER_NO)
 	 WHERE BOARD_NO = ?
 </entry>
+
+<!-- 일반게시판에서는 CATEGORY_NO값이 필수로 들어가기에 null이 되는 경우가 없어 LEFT JOIN을 사용하지 않아도 됬었지만,
+ 사진게시판의 CATEGORY_NO값은 null이므로 CATEGORY 테이블에서는 null값에 대한 데이터가 없어 에러가 발생한다.
+ 따라서 두 가지 경우 모두를 만족시키기 위해서는 LEFT JOIN을 사용하여 BOARD 테이블을 기준으로 CATEGORY 테이블을 JOIN 시켜야 한다. -->
 
 <!-- 첨부파일 조회 쿼리 -->
 <entry key="selectAttachment">
@@ -232,7 +236,7 @@
 </entry>
 
 <!-- 사진게시판 목록 조회용 쿼리 -->
-<entry key="selectThumbnailList1">
+<entry key="selectThumbnailList">
 	SELECT
 	       BOARD_NO
 	     , BOARD_TITLE

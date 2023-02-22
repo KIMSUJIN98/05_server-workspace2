@@ -29,6 +29,10 @@
         display: inline-block;
         margin: 14px;
     }
+    .thumbnail:hover{
+    	cursor: pointer;
+    	opacity: 0.7;
+    }
 </style>
 </head>
 <body>
@@ -55,6 +59,7 @@
 				<% for(Board b: list) { %>
 			            <!-- 썸네일 한개 -->
 			            <div class="thumbnail" align="center">
+			            	<input type="hidden" value="<%= b.getBoardNo() %>">
 			                <img src="<%= b.getTitleImg() %>" width="200" height="150">
 			                <p>
 			                    No.<%= b.getBoardNo() %> <%= b.getBoardTitle() %> <br>
@@ -65,6 +70,13 @@
 	        </div>
 	    <% } %>
     </div>
+    
+    <script>
+    	$(".thumbnail").click(function(){ 																			// 클래스가 thumbnail인 요소가 클릭되었을 때
+    		location.href = "<%=contextPath%>/detail.th?bno=" + $(this).children("input").val(); 					// bno : 자식중에 input요소인 것의 value값
+    	})
+    	
+    </script>
 
 </body>
 </html>

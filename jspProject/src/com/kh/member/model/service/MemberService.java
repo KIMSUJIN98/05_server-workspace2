@@ -91,4 +91,13 @@ public class MemberService {
 		return result;
 	}
 	
+	public int idCheck(String checkId) {
+		Connection conn = getConnection();
+		
+		int count = new MemberDao().idCheck(conn, checkId);
+		// 트랜젝션 처리 불필요함
+		close(conn);
+		return count;
+	}
+	
 }
