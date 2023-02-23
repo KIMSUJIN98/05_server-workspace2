@@ -1,3 +1,5 @@
+<%@page import="com.kh.board.model.vo.Reply"%>
+<%@page import="java.util.ArrayList"%>
 <%@page import="com.kh.board.model.vo.Attachment"%>
 <%@page import="com.kh.board.model.vo.Board"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -8,6 +10,7 @@
 	Attachment at = (Attachment)request.getAttribute("at");
 	// 첨부파일이 없다면 null
 	// 첨부파일이 있다면 파일번호, 원본명, 수정명, 저장경로
+	ArrayList<Reply> list = (ArrayList<Reply>)request.getAttribute("list");
 	
 %>
 <!DOCTYPE html>
@@ -20,7 +23,7 @@
         background-color: black;
         color: white;
         width: 1000px;
-        height: 550px;
+        height: auto;
         margin: auto;
         margin-top: 50px;
     }
@@ -80,7 +83,62 @@
             <% } %>
         </div>
 
+	    <br>
+	    
+	    <div id="reply-area">
+	    	<table border="1" align="center">
+	    		<thead>
+	    			<tr>
+	    				<th>댓글작성</th>
+	    				<td>
+	    					<textarea rows="3" cols="50" style="resize:none;"></textarea>
+	    				</td>
+	    				<td><button>댓글등록</button></td>
+	    			</tr>
+	    		</thead>
+	    		
+	    		<tbody>
+	    			<!-- 아래 스크립트의 value값이 들어올 자리 -->
+	    		</tbody>
+	    		
+	    	</table>
+	    	
+	    	
+	    	<script>
+	    	
+	    		$(function(){ 																		// $ : 모든 그림이 랜더링되고나서 selectReplyList() 함수가 실행됨
+	    			selectReplyList();
+	    		})
+	    	
+	    		// ajax로 해당 게시글에 딸린 댓글 목록 조회용
+	    		function selectReplyList(){
+	    			$.ajax({
+	    				url:"rlist.bo",
+	    				data:{bno:<%=b.getBoardNo()%>},
+	    				success:function(list){
+	    					let value = "";
+	    					for(let i=0; i<list.length; i++){
+	    						value += "<tr>"
+	    						 		   + "<td>" + list[i].replyWriter + "</td>"
+	    						 		   + "<td>" + list[i].replyContent + "</td>"
+	    						 		   + "<td>" + list[i].createDate + "</td>"
+	    						 		   + "</tr>";
+	    						$("#reply-area tbody").html(value);
+	    					}
+	    				},
+	    				error:function(){
+	    					console.log("ajax 통신 실패!");
+	    				}
+	    			})
+	    		}
+	    	</script>
+	    	
+	    	
+	    </div>
+	    
+	    
     </div>
+    
 
 </body>
 </html>

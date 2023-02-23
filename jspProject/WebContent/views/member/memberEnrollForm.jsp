@@ -91,7 +91,7 @@
 
             <div align="center">
                 <button type="submit" id="enroll-btn" disabled>회원가입</button>												<!-- disabled처럼 속성명과 값이 같은 경우에는 한번만 입력해도 된다. -->
-                <button type="reset">초기화</button>
+                <button type="reset" onclick="readonlyFalse();">초기화</button>
             </div>
 
             <br>
@@ -101,6 +101,12 @@
     </div>
     
     <script>
+    	function readonlyFalse(){
+    		const $idInput = $("#enroll-form input[name=userId]");
+    		$idInput.removeAttr("readonly").focus();																	// 초기화 후 아이디 입력창으로 포커스 맞춤.
+    	}
+    	
+    
     	function idCheck(){
     		// 중복확인 버튼 클릭시 사용자가 입력한 아이디 값을 넘겨서 조회 요청(존재하는지 안하는지) => 응답데이터 돌려받기
     		// 1) 사용불가능(NNNNN)일 경우 => alert로 메세지 출력, 다시 입력할 수 있도록 유도
@@ -115,19 +121,20 @@
     			url:"idCheck.me",
     			data:{checkId:$idInput.val()},
     			success:function(result){
-    				if(result == "NNNNN"){
-    					alert("사용할 수 없는 아이디입니다.");
+    				if(result == "NNNNN"){ // 사용불가능일 경우
+    					//console.log("사용불가능");
+    					alert("이미 존재하거나 탈퇴한 회원의 아이디 입니다.");
     					$idInput.val("");
     					$idInput.focus();
-    				}else {
-    					const useFlag = confirm("해당 아이디는 사용가능합니다. 사용하시겠습니까?");
-    					if(useFlag == true){
-    						// 사용하겠다
+    				}else { // 사용가능일 경우
+    					//console.log("사용가능");
+    					if(confirm("해당 아이디는 사용가능합니다. 사용하시겠습니까?")){ // 확인
+    						
     						$idInput.attr("readonly", true);
-    						$("#enroll-btn").attr("disabled", false);
-    						//$("#enroll-btn").removeAttr("disabled");
-    					}else{
-    						// 사용안하겠다
+    						$("#enroll-form :submit").removeAttr("disabled");
+    						//$("#enroll-btn").attr("disabled", false);
+    						
+    					}else{ // 취소
     						$idInput.val("");
         					$idInput.focus();
     					}
