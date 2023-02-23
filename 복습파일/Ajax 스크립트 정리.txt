@@ -21,30 +21,3 @@
 2. 뉴버전으로 변경!
 	<!-- jQuery library -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-
-
-
-
-
-SELECT 
-       BOARD_NO
-     , CATEGORY_NAME
-     , BOARD_TITLE
-     , BOARD_CONTENT
-     , USER_ID
-     , TO_CHAR(CREATE_DATE, 'YYYY/MM/DD') "CREATE_DATE"
-  FROM BOARD
-  LEFT JOIN CATEGORY USING(CATEGORY_NO)
-  JOIN MEMBER ON (BOARD_WRITER = USER_NO)
- WHERE BOARD_NO = 111;
- -- 왼쪽엔 있는데 오른쪽엔 없다 => LEFT JOIN
- 
- SELECT * FROM BOARD;
- SELECT * FROM CATEGORY;
- 
- SELECT * FROM BOARD WHERE BOARD_NO = 111;
- 
- SELECT
-        COUNT(*)
-   FROM MEMBER
-  WHERE USER_ID = ?;
