@@ -1,18 +1,6 @@
-<%@page import="com.kh.board.model.vo.Reply"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="com.kh.board.model.vo.Attachment"%>
-<%@page import="com.kh.board.model.vo.Board"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%
-	Board b = (Board)request.getAttribute("b"); 						// 다운캐스팅
-	// 글번호, 카테고리명, 제목, 내용, 작성자아이디, 작성일
-	Attachment at = (Attachment)request.getAttribute("at");
-	// 첨부파일이 없다면 null
-	// 첨부파일이 있다면 파일번호, 원본명, 수정명, 저장경로
-	ArrayList<Reply> list = (ArrayList<Reply>)request.getAttribute("list");
-	
-%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,7 +18,7 @@
 </style>
 </head>
 <body>
-	<%@ include file = "../common/menubar.jsp" %>
+	<jsp:include page="../common/menubar.jsp"/>
 
     <div class="outer">
         <br>
@@ -41,46 +29,44 @@
             <!-- (tr>th+td+th+td)*4 -->
             <tr>
                 <th width="70">카테고리</th>
-                <td width="70"><%= b.getCategoryNo() %></td>
+                <td width="70">${ b.categoryNo }</td>
                 <th width="70">제목</th>
-                <td width="350"><%= b.getBoardTitle() %></td>
+                <td width="350">${ b.boardTitle }</td>
             </tr>
             <tr>
                 <th>작성자</th>
-                <td><%= b.getBoardWriter() %></td>
+                <td>${ b.boardWriter }</td>
                 <th>작성일</th>
-                <td><%= b.getCreateDate() %></td>
+                <td>${ b.createDate }</td>
             </tr>
             <tr>
                 <th>내용</th>
-                <td colspan="3" style="height: 200px;"><%= b.getBoardContent() %></td>
+                <td colspan="3" style="height: 200px;">${ b.boardContent }</td>
             </tr>
             <tr>
                 <th>첨부파일</th>
                 <td colspan="3">
-                    <% if(at == null) { %>
-                    	<!-- case1. 첨부파일이 없을 경우 -->
-                    	첨부파일이 없습니다.
-                    <% }else { %>
-
-                    	<!-- case2. 첨부파일이 있을 경우 -->
-                    	<a download="<%=at.getOriginName()%>" href="<%=contextPath%>/<%=at.getFilePath() + at.getChangeName()%>"><%= at.getOriginName() %></a>			<!-- 다운로드시 수정파일명이 아닌 원본파일명으로 저장하고 싶다면 다운로드 뒤에 원본값 으로 지정해줘야 함 --> <!-- jsp/resources/board_upfiles/xxxx.png 경로 : 현재 at.getFilePath()가 "resources/board_upfiles/" 처럼 board_upfiles 뒤에 '/'를 포함한 경로를 가지고 있음 -->
-                    <% } %>
+                	<c:choose>
+                		<c:when test="${ empty at }">
+	                    	첨부파일이 없습니다.
+                    	</c:when>
+                    	<c:otherwise>
+                    		<a download="${ at.originName }" href="${at.filePath}${at.changeName}">${ at.originName }</a>			<!-- 다운로드시 수정파일명이 아닌 원본파일명으로 저장하고 싶다면 다운로드 뒤에 원본값 으로 지정해줘야 함 --> <!-- jsp/resources/board_upfiles/xxxx.png 경로 : 현재 at.getFilePath()가 "resources/board_upfiles/" 처럼 board_upfiles 뒤에 '/'를 포함한 경로를 가지고 있음 -->
+                    	</c:otherwise>
+                    </c:choose>
                 </td>
-
             </tr>
-
         </table>
         <br>
 
         <div align="center">
-            <a href="<%=contextPath %>/list.bo?cpage=1" class="btn btn-sm btn-secondary">목록가기</a>
+            <a href="list.bo?cpage=1" class="btn btn-sm btn-secondary">목록가기</a>
 
             <!-- 로그인한 사용자가 게시글 작성자일 경우 -->
-            <% if(loginUser != null && loginUser.getUserId().equals(b.getBoardWriter())){ %>
-                <a href="<%=contextPath %>/updateForm.bo?bno=<%= b.getBoardNo() %>" class="btn btn-sm btn-warning">수정하기</a>
+            <c:if test="${ not empty loginUser and loginUser.userId eq b.boardWriter }">
+                <a href="updateForm.bo?bno=${ b.boardNo }" class="btn btn-sm btn-warning">수정하기</a>
                 <a href="#" class="btn btn-sm btn-danger">삭제하기</a>
-            <% } %>
+            </c:if>
         </div>
 
 	    <br>
@@ -91,17 +77,20 @@
 	    			<tr>
 	    				<th>댓글작성</th>
 	    				
-	    				<% if(loginUser != null){ // 로그인이 되어 있는 경우 %>
-		    				<td>
-		    					<textarea id="replyContent" rows="3" cols="50" style="resize:none;"></textarea>
-		    				</td>
-		    				<td><button onclick="insertReply();">댓글등록</button></td>
-		    			<% }else { %>
-		    				<td>
-		    					<textarea rows="3" cols="50" style="resize:none;" readonly>로그인 후 이용가능한 서비스 입니다.</textarea>
-		    				</td>
-		    				<td><button disabled>댓글등록</button></td>
-		    			<% } %>
+	    				<c:choose>
+	    					<c:when test="${ not empty loginUser }">
+			    				<td>
+			    					<textarea id="replyContent" rows="3" cols="50" style="resize:none;"></textarea>
+			    				</td>
+			    				<td><button onclick="insertReply();">댓글등록</button></td>
+		    				</c:when>
+		    				<c:otherwise>
+			    				<td>
+			    					<textarea rows="3" cols="50" style="resize:none;" readonly>로그인 후 이용가능한 서비스 입니다.</textarea>
+			    				</td>
+			    				<td><button disabled>댓글등록</button></td>
+		    				</c:otherwise>
+		    			</c:choose>
 	    			</tr>
 	    		</thead>
 	    		
@@ -127,7 +116,7 @@
 	    				url:"rinsert.bo",
 	    				data:{
 	    					content:$("#replyContent").val(),													// key:value
-	    					bno:<%=b.getBoardNo()%>
+	    					bno:${b.boardNo}
 	    					// userNo : 로그인 안한 경우, loginUser null인 경우에는 널포인트 날 수도 있음					// (로그인 안하면 작성을 못하게끔 막아놓긴 했지만 만일의 사태 대비하여 확실하게 하기 위함)
 	    				},
 	    				type:"post",
@@ -154,7 +143,7 @@
 	    		function selectReplyList(){
 	    			$.ajax({
 	    				url:"rlist.bo",
-	    				data:{bno:<%=b.getBoardNo()%>},
+	    				data:{bno:${b.boardNo}},
 	    				success:function(list){
 	    					let value = "";
 	    					for(let i=0; i<list.length; i++){

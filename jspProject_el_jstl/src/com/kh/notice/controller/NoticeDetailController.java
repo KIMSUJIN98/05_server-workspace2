@@ -46,8 +46,7 @@ public class NoticeDetailController extends HttpServlet {
 		}else { // 실패 == 조회 불가능한 공지사항
 			// 에러문구 보여지는 에러페이지
 			request.setAttribute("errorMsg", "공지사항 상세 조회 실패!");
-			request.getRequestDispatcher("views/common/errorPage.jsp")
-							.forward(request, response);
+			request.getRequestDispatcher("views/common/errorPage.jsp").forward(request, response);
 			
 		}
 	}

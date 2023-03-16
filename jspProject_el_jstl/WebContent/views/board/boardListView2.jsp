@@ -1,10 +1,6 @@
-<%@page import="com.kh.board.model.vo.Board"%>
-<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%
-	ArrayList<Board> list = (ArrayList<Board>)request.getAttribute("list");
-%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,27 +41,27 @@
 	        </tr>
 	    </thead>
 	    <tbody>
-	    	<% if(list.isEmpty()) { %>
-	        <!-- case1. 게시글이 없을 경우 -->
-	         <tr>
-	             <td colspan="6">조회된 게시글이 없습니다.</td>
-	         </tr>
-	<% }else { %>
-	
-	        <!-- case2. 게시글이 있을 경우 -->
-	         <% for(Board b: list) { %>
-	          <tr>
-	              <td><%= b.getBoardNo() %></td>
-	              <td><%= b.getCategoryNo() %></td>
-	              <td><%= b.getBoardTitle() %></td>
-	              <td><%= b.getBoardWriter() %></td>
-	              <td><%= b.getCount() %></td>
-	              <td><%= b.getCreateDate() %></td>
-	          </tr>
-	         <% } %>
-	       <% } %>
-	    </tbody>
-    </table>
+	    	<c:choose>
+	    		<c:when test="${ empty list }">
+		        	<tr>
+		        		<td colspan="6">조회된 게시글이 없습니다.</td>
+		        	</tr>
+	         	</c:when>
+	         	<c:otherwise>
+	         		<c:forEach var="b" items="${ list }">
+						<tr>
+							<td>${ b.boardNo }</td>
+							<td>${ b.categoryNo }</td>
+							<td>${ b.boardTitle }</td>
+							<td>${ b.boardWriter }</td>
+							<td>${ b.count }</td>
+							<td>${ b.createDate }</td>
+						</tr>
+					</c:forEach>
+				</c:otherwise>
+	       </c:choose>
+		</tbody>
+	</table>
 </div>
 <script>
 

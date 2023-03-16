@@ -1,10 +1,6 @@
-<%@page import="com.kh.board.model.vo.Board"%>
-<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%
-	ArrayList<Board> list = (ArrayList<Board>)request.getAttribute("list");
-%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -36,44 +32,43 @@
 </style>
 </head>
 <body>
-	<%@ include file = "../common/menubar.jsp" %>
+	<jsp:include page="../common/menubar.jsp"/>
 
     <div class="outer">
         <br>
         <h2 align="center">사진게시판</h2>
         <br>
 
-		<% if(loginUser != null){ %>
-        	<!-- 로그인한 회원만 보여지게 -->
+		<c:if test="${ not empty loginUser }">
         	<div align="right" style="width: 850px;">
-            	<a href="<%= contextPath %>/enrollForm.th" class="btn btn-sm btn-secondary">글작성</a>
+            	<a href="enrollForm.th" class="btn btn-sm btn-secondary">글작성</a>
         	</div>
-        <% } %>
+        </c:if>
         
-        <% if(list.isEmpty()) { %>
-        	<!-- 게시글이 없을 경우 -->
-            <p align="center">조회된 게시글이 없습니다.</p>
-			
-		<% }else { %>
-		    <div class="list-area">
-				<% for(Board b: list) { %>
-			            <!-- 썸네일 한개 -->
-			            <div class="thumbnail" align="center">
-			            	<input type="hidden" value="<%= b.getBoardNo() %>">
-			                <img src="<%= b.getTitleImg() %>" width="200" height="150">
-			                <p>
-			                    No.<%= b.getBoardNo() %> <%= b.getBoardTitle() %> <br>
-			                    조회수 : <%= b.getCount() %>
-			                </p>
-			            </div>
-		    	<% } %>
-	        </div>
-	    <% } %>
+        <c:choose>
+        	<c:when test="${ empty list }">
+            	<p align="center">조회된 게시글이 없습니다.</p>
+			</c:when>
+			<c:otherwise>
+			    <div class="list-area">
+			    	<c:forEach var="b" items="${ list }">
+				    	<div class="thumbnail" align="center">
+				        	<input type="hidden" value="${ b.boardNo }">
+				            <img src="${ b.titleImg }" width="200" height="150">
+				            <p>
+				            	No.${ b.boardNo } ${ b.boardTitle } <br>
+				                조회수 : ${ b.count }
+				            </p>
+				    	</div>
+			    	</c:forEach>
+		        </div>
+	        </c:otherwise>
+	    </c:choose>
     </div>
     
     <script>
     	$(".thumbnail").click(function(){ 																			// 클래스가 thumbnail인 요소가 클릭되었을 때
-    		location.href = "<%=contextPath%>/detail.th?bno=" + $(this).children("input").val(); 					// bno : 자식중에 input요소인 것의 value값
+    		location.href = "detail.th?bno=" + $(this).children("input").val(); 					// bno : 자식중에 input요소인 것의 value값
     	})
     	
     </script>

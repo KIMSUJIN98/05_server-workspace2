@@ -24,17 +24,16 @@
 </style>
 </head>
 <body>
-	<%@ include file = "../common/menubar.jsp" %>
+	<jsp:include page="../common/menubar.jsp"/>
 
     <div class="outer">
         <br>
         <h2 align="center">사진게시판 작성하기</h2>
 
-        <form action="<%= contextPath %>/insert.th" id="enroll-form" method="post" enctype="multipart/form-data">       <!-- 첨부파일은 post 방식의 multipart/form-data가 반드시 필요함 -->
+        <form action="insert.th" id="enroll-form" method="post" enctype="multipart/form-data">       <!-- 첨부파일은 post 방식의 multipart/form-data가 반드시 필요함 -->
             
-            <input type="hidden" name="userNo" value="<%= loginUser.getUserNo() %>">
+            <input type="hidden" name="userNo" value="${ loginUser.userNo }">
             <table align="center">
-                <!-- (tr>th+td*3)*4 -->
                 <tr>
                     <th>제목</th>
                     <td colspan="3"><input type="text" name="title" required></td>

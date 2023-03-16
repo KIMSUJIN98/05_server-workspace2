@@ -26,7 +26,6 @@
         <br>
 
         <table id="detail-area" border="1">
-            <!-- (tr>th+td+th+td)*3 -->
             <tr>
                 <th width="70">제목</th>
                 <td colspan="3" width="430">${notice.noticeTitle}</td>
@@ -49,7 +48,6 @@
         <div>
             <a href="list.no" class="btn btn-sm btn-secondary">목록가기</a>
             
-            <!-- 현재 로그인한 사용자가 해당 글을 쓴 본인일 경우 -->
             <c:if test="${ not empty loginUser and notice.noticeWriter eq loginUser.userId }">
                 <a href="updateForm.no?num=${notice.noticeNo}" class="btn btn-sm btn-warning">수정하기</a>
                 <a href="delete.no?num=${notice.noticeNo}" class="btn btn-sm btn-danger">삭제하기</a>
